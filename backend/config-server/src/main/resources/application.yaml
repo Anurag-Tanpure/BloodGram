@@ -1,0 +1,21 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-server
+
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/Anurag-Tanpure/bloodgram-config.git
+          username: Anurag-Tanpure
+          password: ${BLOODGRAM_GITHUB_TOKEN}
+          clone-on-start: true
+          default-label: main
+
+  eureka:
+    client:
+      service-url:
+        default-zone: http://localhost:8761/eureka/

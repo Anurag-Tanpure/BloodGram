@@ -1,0 +1,27 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      routes:
+
+        - id: auth-service
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/auth/**
+
+        - id: user-service
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/user/**
+
+    config:
+      enabled: false
+
+jwt:
+  secret: bG9uZ3N1cGVyU2VjcmV0S2V5mR9yQXV0aFNlcnZpY2VXZXJ5U2VjdXJlVG9rZW5SZXN0QVBJR2F0ZXdpdGhFdXJla2E=
+  expiration: 3600000

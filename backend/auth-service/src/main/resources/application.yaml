@@ -1,0 +1,28 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: auth-service
+
+  datasource:
+    url: jdbc:mysql://localhost:3307/bloodgram
+    username: root
+    password: anurag
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+eureka:
+  client:
+    service-url:
+      default-zone: http://localhost:8761/eureka/
+      register-with-eureka: true;
+      fetch-registry: true
+
+jwt:
+  secret: bG9uZ3N1cGVyU2VjmcV0S2V5mR9yQXV0aFNlcnZpY2VXZXJ5U2VjdXJlVG9rZW5SZXN0QVBJR2F0ZXdpdGhF dXJla2E=
+  expiration: 3600000
