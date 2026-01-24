@@ -77,4 +77,20 @@ public class AuthService {
 
          return jwtUtils.generateToken(userDetailsImp);
     }
+
+
+
+    public void addDonorRole(String email){
+         User user = userRepostiory.findByEmail(email)
+                 .orElseThrow(()-> new RuntimeException("user Not found expcetion"));
+
+         Role donorRole = roleRepository.findByRoleName("ROLE_DONOR")
+                .orElseThrow(() -> new RuntimeException("ROLE_DONOR not found"));
+
+        if (!user.getRoles().contains(donorRole)) {
+            user.getRoles().add(donorRole);
+            userRepostiory.save(user);
+        }
+
+    }
 }

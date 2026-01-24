@@ -8,8 +8,10 @@ package com.bloodgram.donor.service;
 
 import com.bloodgram.donor.dto.request.DonorRegisterRequest;
 import com.bloodgram.donor.entity.Donor;
+import com.bloodgram.donor.external.AuthClient;
 import com.bloodgram.donor.repository.DonorRepo;
 import com.bloodgram.donor.repository.UserRepo;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,19 +21,30 @@ public class DonorService {
 
     private final  DonorRepo  donorRepo;
     private final UserRepo userRepo;
+    private final AuthClient authClient;
 
-    public DonorService(DonorRepo donorRepo, UserRepo userRepo) {
+    public DonorService(DonorRepo donorRepo, UserRepo userRepo, AuthClient authClient) {
         this.donorRepo = donorRepo;
         this.userRepo = userRepo;
+        this.authClient = authClient;
     }
 
 
+    @Transactional
     public Donor registerDonor(DonorRegisterRequest request,String email)
     {
+
+        if (donorRepo.existsByPhoneNumber(request.getPhoneNumber())) {
+            throw new IllegalArgumentException("Phone already registered");
+        }
 
         Long userId = userRepo.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found with email: " + email))
                 .getId();
+
+        if (donorRepo.existsByUserId(userId)) {
+            throw new IllegalArgumentException("User already has donor profile");
+        }
 
         Donor donor = Donor.builder()
                 .userId(userId)
@@ -51,7 +64,12 @@ public class DonorService {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        return donor;
+        Donor savedDonor = donorRepo.save(donor);
+
+        authClient.addDonorRole(email);
+
+        return savedDonor;
+
     }
 
 }

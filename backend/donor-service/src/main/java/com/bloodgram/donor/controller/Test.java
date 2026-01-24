@@ -6,16 +6,19 @@
 
 package com.bloodgram.donor.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.bloodgram.donor.dto.request.DonorRegisterRequest;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class Test {
 
-    @GetMapping("/test")
-    public String check()
+
+
+    @PostMapping("/test")
+    public String check(@RequestBody DonorRegisterRequest request)
     {
-        return "Test controller working fine";
+
+
+
     }
 }

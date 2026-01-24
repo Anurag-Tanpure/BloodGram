@@ -13,4 +13,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DonorRepo extends JpaRepository<Donor,Long> {
 
+    boolean existsByPhoneNumber(String phoneNumber);
+
+    boolean existsByUserId(Long userId);
+
 }

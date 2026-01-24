@@ -35,7 +35,7 @@ public class SecurityBeansConfig {
         return http
                 .csrf(csrf->csrf.disable())
                 .authorizeHttpRequests(auth->auth
-                        .requestMatchers("/auth/signup","/auth/login","/auth/test").permitAll()
+                        .requestMatchers("/auth/signup","/auth/login","/auth/test","/auth/internal/add-donor-role").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
