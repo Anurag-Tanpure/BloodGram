@@ -1,9 +1,9 @@
 server:
-  port: 8082
+  port: 8083
 
 spring:
   application:
-    name: auth-service
+    name: donor-service
 
   datasource:
     url: jdbc:mysql://localhost:3307/bloodgram

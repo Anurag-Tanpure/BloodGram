@@ -23,5 +23,5 @@ spring:
       enabled: false
 
 jwt:
-  secret: bG9uZ3N1cGVyU2VjcmV0S2V5mR9yQXV0aFNlcnZpY2VXZXJ5U2VjdXJlVG9rZW5SZXN0QVBJR2F0ZXdpdGhFdXJla2E=
+  secret: ${BLOODGRAM_JWT_KEY:fallback-super-secret-key-for-dev-only}
   expiration: 3600000
