@@ -7,18 +7,25 @@
 package com.bloodgram.donor.controller;
 
 import com.bloodgram.donor.dto.request.DonorRegisterRequest;
+import com.bloodgram.donor.entity.Donor;
+import com.bloodgram.donor.mapper.DonorMapper;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class Test {
 
 
+    private final DonorMapper donorMapper;
+
+    public Test(DonorMapper donorMapper) {
+        this.donorMapper = donorMapper;
+    }
 
     @PostMapping("/test")
-    public String check(@RequestBody DonorRegisterRequest request)
+    public Donor check(@RequestBody DonorRegisterRequest request)
     {
 
-
+        return donorMapper.donorRegisterRequestToDonor(request);
 
     }
 }

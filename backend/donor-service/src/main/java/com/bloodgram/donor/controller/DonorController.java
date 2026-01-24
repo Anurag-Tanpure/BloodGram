@@ -7,10 +7,13 @@
 package com.bloodgram.donor.controller;
 
 import com.bloodgram.donor.dto.request.DonorRegisterRequest;
+import com.bloodgram.donor.dto.response.DonorRegisterResponse;
 import com.bloodgram.donor.entity.Donor;
 import com.bloodgram.donor.service.DonorService;
 import com.bloodgram.donor.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,15 +30,18 @@ public class DonorController {
 
 
     @PostMapping("/register")
-    public Donor registerDonor(@RequestBody DonorRegisterRequest request,
-                               @RequestHeader("Authorization") String authHeader){
+    public ResponseEntity<DonorRegisterResponse> registerDonor(@RequestBody DonorRegisterRequest request,
+                                        @RequestHeader("Authorization") String authHeader){
 
         String token = authHeader.substring(7);
 
         String email = jwtUtil.getUsernameFromToken(token);
 
-        return donorService.registerDonor(request,email);
+        DonorRegisterResponse response =  donorService.registerDonor(request,email);
 
+        return  ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(response);
     }
 
 }
