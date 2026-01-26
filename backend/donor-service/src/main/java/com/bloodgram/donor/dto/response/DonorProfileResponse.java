@@ -1,47 +1,40 @@
 /**
  * Created by Anurag Tanpure
- * Date: 23-01-2026 02:23 pm
+ * Date: 26-01-2026 03:22 pm
  */
 
 
-package com.bloodgram.donor.entity;
+package com.bloodgram.donor.dto.response;
 
-import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "donor")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Donor {
+public class DonorProfileResponse {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long donorId;
 
-    @Column(nullable = false, unique = true)
-    private Long userId;
-
-    @Column(nullable=false)
     private String name;
 
-    @Column(nullable = false)
     private String bloodGroup;
 
     private LocalDate dateOfBirth;
 
     private String gender;
 
-    @Column(nullable = false, unique = true)
     private String phoneNumber;
 
     private String city;
+
     private String state;
+
     private String country;
 
     private LocalDate lastDonationDate;
@@ -54,6 +47,4 @@ public class Donor {
 
     private String imageUrl;
 
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 }

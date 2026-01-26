@@ -47,16 +47,13 @@ public class AuthService {
           user.setEmail(signUpRequest.getEmail());
           user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
 
-          Set<Role> roles = new HashSet<>();
 
-          for(String roleName : signUpRequest.getRoles())
-          {
-              Role role = roleRepository.findByRoleName(roleName)
-                      .orElseThrow(()->new RuntimeException("Role not found"));
-              roles.add(role);
-          }
+        Role userRole = roleRepository.findByRoleName("ROLE_USER")
+                .orElseThrow(() -> new RuntimeException("ROLE_USER not found"));
 
-          user.setRoles(roles);
+        Set<Role> roles = new HashSet<>();
+        roles.add(userRole);
+        user.setRoles(roles);
           userRepostiory.save(user);
           return "User register successfully";
     }

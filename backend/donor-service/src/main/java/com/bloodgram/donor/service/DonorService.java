@@ -7,8 +7,11 @@
 package com.bloodgram.donor.service;
 
 import com.bloodgram.donor.dto.request.DonorRegisterRequest;
+import com.bloodgram.donor.dto.response.DonorProfileResponse;
 import com.bloodgram.donor.dto.response.DonorRegisterResponse;
 import com.bloodgram.donor.entity.Donor;
+import com.bloodgram.donor.exception.BadRequestionException;
+import com.bloodgram.donor.exception.ResourceNotFoundException;
 import com.bloodgram.donor.external.AuthClient;
 import com.bloodgram.donor.mapper.DonorMapper;
 import com.bloodgram.donor.repository.DonorRepo;
@@ -39,15 +42,15 @@ public class DonorService {
     {
 
         if (donorRepo.existsByPhoneNumber(request.getPhoneNumber())) {
-            throw new IllegalArgumentException("Phone already registered");
+            throw new BadRequestionException("Phone number already registered");
         }
 
         Long userId = userRepo.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + email))
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email:"+email))
                 .getId();
 
         if (donorRepo.existsByUserId(userId)) {
-            throw new IllegalArgumentException("User already has donor profile");
+            throw new BadRequestionException("User already has donor profile");
         }
 
 
@@ -70,5 +73,22 @@ public class DonorService {
         return response;
 
     }
+
+    @Transactional
+    public DonorProfileResponse getProfile(String email)
+    {
+        Long userId = userRepo.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Donor not found with email:"+email))
+                .getId();
+
+        Donor donor = donorRepo.findByUserId(userId)
+                .orElseThrow(()->new ResourceNotFoundException("Donor not found with email:"+email));
+
+        return donorMapper.donorToDonorProfileResponse(donor);
+
+    }
+
+
+
 
 }

@@ -23,6 +23,8 @@ public class DonorRegisterResponse
 {
     private Long donorId;
 
+    private String name;
+
     private String bloodGroup;
 
     private LocalDate dateOfBirth;

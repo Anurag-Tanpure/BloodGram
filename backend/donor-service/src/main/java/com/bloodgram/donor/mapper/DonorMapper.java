@@ -7,6 +7,7 @@
 package com.bloodgram.donor.mapper;
 
 import com.bloodgram.donor.dto.request.DonorRegisterRequest;
+import com.bloodgram.donor.dto.response.DonorProfileResponse;
 import com.bloodgram.donor.dto.response.DonorRegisterResponse;
 import com.bloodgram.donor.entity.Donor;
 import org.mapstruct.Mapper;
@@ -26,4 +27,6 @@ public interface DonorMapper
 
     DonorRegisterResponse donorToDonorRegisterResponse(Donor donor);
 
+
+    DonorProfileResponse donorToDonorProfileResponse(Donor donor);
 }
