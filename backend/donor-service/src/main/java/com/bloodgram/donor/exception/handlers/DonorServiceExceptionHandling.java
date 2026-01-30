@@ -73,7 +73,7 @@ public class DonorServiceExceptionHandling {
         ApiErrorResponse error = ApiErrorResponse.builder()
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .error("Internal Server Error")
-                .message("something went wrong! pls try again")
+                .message(ex.getMessage())
                 .path(request.getRequestURI())
                 .timestam(LocalDateTime.now())
                 .build();

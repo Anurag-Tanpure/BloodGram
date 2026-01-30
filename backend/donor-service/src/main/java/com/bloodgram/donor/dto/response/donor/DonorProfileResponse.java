@@ -4,7 +4,7 @@
  */
 
 
-package com.bloodgram.donor.dto.response;
+package com.bloodgram.donor.dto.response.donor;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,6 +18,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class DonorProfileResponse {
+
 
     private Long donorId;
 
@@ -46,5 +47,4 @@ public class DonorProfileResponse {
     private Boolean isAvailable;
 
     private String imageUrl;
-
 }

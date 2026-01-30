@@ -7,8 +7,10 @@
 package com.bloodgram.donor.service;
 
 import com.bloodgram.donor.dto.request.DonorRegisterRequest;
-import com.bloodgram.donor.dto.response.DonorProfileResponse;
-import com.bloodgram.donor.dto.response.DonorRegisterResponse;
+import com.bloodgram.donor.dto.request.FindDonorRequest;
+import com.bloodgram.donor.dto.response.donor.AvailabeDonorsReponse;
+import com.bloodgram.donor.dto.response.donor.DonorProfileResponse;
+import com.bloodgram.donor.dto.response.donor.DonorRegisterResponse;
 import com.bloodgram.donor.entity.Donor;
 import com.bloodgram.donor.exception.BadRequestionException;
 import com.bloodgram.donor.exception.ResourceNotFoundException;
@@ -20,6 +22,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class DonorService {
@@ -88,6 +91,30 @@ public class DonorService {
 
     }
 
+     public List<AvailabeDonorsReponse>  findAvailableDonors(FindDonorRequest request)
+     {
+         List<Donor> donors = donorRepo.findByBloodGroupAndCityAndStateAndCountryAndIsAvailable(
+                 request.getBloodGroup(),
+                 request.getCity(),
+                 request.getState(),
+                 request.getCountry(),
+                 true
+         ).orElse(List.of());
+
+        return donors.stream()
+                .map(donorMapper::donorToAvailabeDonorsResponse)
+                .toList();
+
+     }
+
+     public DonorProfileResponse findByPhoneNumber(String phoneNumber)
+     {
+         return donorMapper.donorToDonorProfileResponse(
+                 donorRepo.findByPhoneNumber(phoneNumber)
+                         .orElseThrow(()->
+                                 new ResourceNotFoundException("Donor not registered with phoneNnumber:"+phoneNumber))
+         );
+     }
 
 
 

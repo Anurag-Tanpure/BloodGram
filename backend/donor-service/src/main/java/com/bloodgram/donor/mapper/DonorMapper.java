@@ -7,12 +7,12 @@
 package com.bloodgram.donor.mapper;
 
 import com.bloodgram.donor.dto.request.DonorRegisterRequest;
-import com.bloodgram.donor.dto.response.DonorProfileResponse;
-import com.bloodgram.donor.dto.response.DonorRegisterResponse;
+import com.bloodgram.donor.dto.response.donor.AvailabeDonorsReponse;
+import com.bloodgram.donor.dto.response.donor.DonorProfileResponse;
+import com.bloodgram.donor.dto.response.donor.DonorRegisterResponse;
 import com.bloodgram.donor.entity.Donor;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.springframework.stereotype.Component;
 
 @Mapper(componentModel = "spring")
 public interface DonorMapper
@@ -29,4 +29,8 @@ public interface DonorMapper
 
 
     DonorProfileResponse donorToDonorProfileResponse(Donor donor);
+
+    AvailabeDonorsReponse donorToAvailabeDonorsResponse(Donor donor);
+
+
 }
