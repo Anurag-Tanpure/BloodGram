@@ -20,6 +20,8 @@ import java.time.LocalDateTime;
 @Builder
 public class DonationRequestUserListResponsedto {
 
+    private Long id;// Request Id
+
     private Long donorId;
 
     private String donorname;

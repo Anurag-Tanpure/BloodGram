@@ -21,6 +21,8 @@ import java.time.LocalDateTime;
 public class DonationRequestResponseListDto
 {
 
+    private Long id;// request ID
+
     private Long receiverId;
 
     private RequestStatus status;

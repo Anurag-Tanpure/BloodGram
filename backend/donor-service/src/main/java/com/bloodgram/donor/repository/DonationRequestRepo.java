@@ -28,4 +28,6 @@ public interface DonationRequestRepo extends JpaRepository<DonationRequest,Long>
 
     Optional<List<DonationRequest>> findByDonorId(Long donorId);
 
+    Optional<DonationRequest> findById(Long id);
+
 }

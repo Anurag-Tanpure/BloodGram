@@ -75,4 +75,33 @@ public class DonationRequestController {
                .ok(list);
     }
 
+    @PutMapping("/accept/{id}")
+    @PreAuthorize("hasRole('DONOR')")
+    public ResponseEntity<DonationRequestResponseDto> acceptRequest(
+            @PathVariable Long id,
+            @RequestHeader("Authorization") String header
+    )
+    {
+        String email = jwtUtil.getUsernameFromToken(header);
+
+        return ResponseEntity.ok(
+                donationRequestService.accept(id,email)
+        );
+    }
+
+    @PutMapping("/reject/{id}")
+    @PreAuthorize("hasRole('DONOR')")
+    public ResponseEntity<DonationRequestResponseDto> rejectRequest(
+            @PathVariable Long id,
+            @RequestHeader("Authorization") String header
+    )
+    {
+        String email = jwtUtil.getUsernameFromToken(header);
+
+        return ResponseEntity.ok(
+                donationRequestService.reject(id,email)
+        );
+    }
+
+
 }

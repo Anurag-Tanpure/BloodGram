@@ -12,7 +12,7 @@ import com.bloodgram.donor.dto.response.donor.AvailabeDonorsReponse;
 import com.bloodgram.donor.dto.response.donor.DonorProfileResponse;
 import com.bloodgram.donor.dto.response.donor.DonorRegisterResponse;
 import com.bloodgram.donor.entity.Donor;
-import com.bloodgram.donor.exception.BadRequestionException;
+import com.bloodgram.donor.exception.BadRequestException;
 import com.bloodgram.donor.exception.ResourceNotFoundException;
 import com.bloodgram.donor.external.AuthClient;
 import com.bloodgram.donor.mapper.DonorMapper;
@@ -45,7 +45,7 @@ public class DonorService {
     {
 
         if (donorRepo.existsByPhoneNumber(request.getPhoneNumber())) {
-            throw new BadRequestionException("Phone number already registered");
+            throw new BadRequestException("Phone number already registered");
         }
 
         Long userId = userRepo.findByEmail(email)
@@ -53,7 +53,7 @@ public class DonorService {
                 .getId();
 
         if (donorRepo.existsByUserId(userId)) {
-            throw new BadRequestionException("User already has donor profile");
+            throw new BadRequestException("User already has donor profile");
         }
 
 

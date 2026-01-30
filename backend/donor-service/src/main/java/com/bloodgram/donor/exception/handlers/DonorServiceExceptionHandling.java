@@ -7,7 +7,7 @@
 package com.bloodgram.donor.exception.handlers;
 
 import com.bloodgram.donor.dto.response.ApiErrorResponse;
-import com.bloodgram.donor.exception.BadRequestionException;
+import com.bloodgram.donor.exception.BadRequestException;
 import com.bloodgram.donor.exception.ResourceNotFoundException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -19,6 +19,7 @@ import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
@@ -45,9 +46,9 @@ public class DonorServiceExceptionHandling {
 
     }
 
-    @ExceptionHandler(BadRequestionException.class)
+    @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ApiErrorResponse> badRequestException(
-            BadRequestionException ex,
+            BadRequestException ex,
             HttpServletRequest request
     )
     {
@@ -64,6 +65,23 @@ public class DonorServiceExceptionHandling {
                 .body(error);
     }
 
+     @ExceptionHandler(AccessDeniedException.class)
+     public ResponseEntity<ApiErrorResponse> accessDeniedException(AccessDeniedException ex,
+                                                                   HttpServletRequest request)
+     {
+         ApiErrorResponse error = ApiErrorResponse.builder()
+                 .status(HttpStatus.FORBIDDEN.value())
+                 .error("Access Denied")
+                 .message(ex.getMessage())
+                 .path(request.getRequestURI())
+                 .timestam(LocalDateTime.now())
+                 .build();
+
+         return ResponseEntity
+                 .status(HttpStatus.BAD_REQUEST)
+                 .body(error);
+
+     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponse> exception(

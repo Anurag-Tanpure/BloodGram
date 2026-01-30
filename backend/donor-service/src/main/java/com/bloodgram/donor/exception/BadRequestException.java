@@ -6,8 +6,8 @@
 
 package com.bloodgram.donor.exception;
 
-public class BadRequestionException extends RuntimeException {
-    public BadRequestionException(String message) {
+public class BadRequestException extends RuntimeException {
+    public BadRequestException(String message) {
         super(message);
     }
 }

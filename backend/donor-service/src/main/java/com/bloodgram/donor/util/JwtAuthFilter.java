@@ -5,10 +5,12 @@
 
 package com.bloodgram.donor.util;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -34,18 +36,25 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
-        System.out.println("yaha tk chala");
         String header = request.getHeader("Authorization");
 
-        System.out.println("2 br ");
         if (header != null && header.startsWith("Bearer ")) {
 
             String token = header.substring(7);
+            if (!jwtUtil.validateToken(token)) {  // INVALID TOKEN
+                response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                response.setContentType("application/json");
+                response.getWriter().write("""
+                {
+                    "status": 401,
+                    "error": "Unauthorized", 
+                    "message": "Invalid or expired token",
+                    "path": "%s"
+                }
+                """.formatted(request.getRequestURI()));
+                return;  // STOP chain
+            }
 
-            System.out.println("yaa be hia ");
-            if (jwtUtil.validateToken(token)) {
-
-                System.out.println("yaha ni he lala");
                 String email = jwtUtil.getUsernameFromToken(header);
                 List<String> roles = jwtUtil.getRoles(token);
 
@@ -54,7 +63,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                 .map(SimpleGrantedAuthority::new)
                                 .toList();
 
-                authorities.forEach(System.out::println);
 
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(
@@ -66,7 +74,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext()
                         .setAuthentication(authentication);
             }
-        }
 
         filterChain.doFilter(request, response);
     }

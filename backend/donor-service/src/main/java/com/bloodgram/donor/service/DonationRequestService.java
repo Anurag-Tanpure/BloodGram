@@ -12,6 +12,8 @@ import com.bloodgram.donor.dto.response.donationRequest.DonationRequestUserListR
 import com.bloodgram.donor.entity.DonationRequest;
 import com.bloodgram.donor.entity.Donor;
 import com.bloodgram.donor.entity.enums.RequestStatus;
+import com.bloodgram.donor.exception.AccessDeniedException;
+import com.bloodgram.donor.exception.BadRequestException;
 import com.bloodgram.donor.exception.ResourceNotFoundException;
 import com.bloodgram.donor.mapper.DonationRequestMapper;
 import com.bloodgram.donor.repository.DonationRequestRepo;
@@ -23,7 +25,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.bloodgram.donor.entity.enums.RequestStatus.PENDING;
+import static com.bloodgram.donor.entity.enums.RequestStatus.*;
 
 @Service
 public class DonationRequestService {
@@ -49,8 +51,12 @@ public class DonationRequestService {
                 .orElseThrow(() -> new ResourceNotFoundException("user not found with email:" + email))
                 .getId();
 
+        if(donorId==userId)
+            throw new BadRequestException("you can not create request for your own");
+
         if(donationRequestRepo.existsByReceiverIdAndDonorIdAndStatus(userId,donorId,PENDING))
             throw new RuntimeException("Already requested");
+
 
         String donorPhone = donorRepo.findByDonorId(donorId)
                 .orElseThrow(() -> new ResourceNotFoundException("Donor not found"))
@@ -119,6 +125,7 @@ public class DonationRequestService {
                        phone=donor.getPhoneNumber();
 
                     return DonationRequestUserListResponsedto.builder()
+                            .id(req.getId())
                             .donorId(req.getDonorId())
                             .bloodGroup(donor.getBloodGroup())
                             .city(donor.getCity())
@@ -128,12 +135,63 @@ public class DonationRequestService {
                             .requestDate(req.getRequestDate())
                             .build();
                         }
-
-
                 )
                 .toList();
 
     }
+
+
+    public DonationRequestResponseDto accept(Long id,String email)
+    {
+        DonationRequest request = donationRequestRepo.findById(id)
+                .orElseThrow(()->new ResourceNotFoundException("Request Not found"));
+        Long userId = userRepo.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("user not found with email:" + email))
+                .getId();
+
+        Long donorId = donorRepo.findByUserId(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User is not donor"))
+                .getDonorId();
+
+            if(!request.getDonorId().equals(donorId))
+            {
+                throw new AccessDeniedException("This is not your request");
+            }
+
+            request.setStatus(ACCEPTED);
+
+            donationRequestRepo.save(request);
+
+            return  donationRequestMapper.donationRequestToDonationRequestResponsedto(request);
+
+    }
+
+    public DonationRequestResponseDto reject(Long id,String email)
+    {
+        DonationRequest request = donationRequestRepo.findById(id)
+                .orElseThrow(()->new ResourceNotFoundException("Request Not found"));
+        Long userId = userRepo.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("user not found with email:" + email))
+                .getId();
+
+        Long donorId = donorRepo.findByUserId(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User is not donor"))
+                .getDonorId();
+
+        if(!request.getDonorId().equals(donorId))
+        {
+            throw new AccessDeniedException("This is not your request");
+        }
+
+         request.setStatus(REJECTED);
+
+         donationRequestRepo.save(request);
+
+         return  donationRequestMapper.donationRequestToDonationRequestResponsedto(request);
+
+    }
+
+
 
 
 
