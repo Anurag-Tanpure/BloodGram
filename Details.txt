@@ -1,0 +1,69 @@
+# BloodGram Project Overview
+
+BloodGram is a comprehensive web application designed to connect blood donors with recipients, addressing emergency blood requirements efficiently. It is built using a modern microservices architecture on the backend and a responsive single-page application on the frontend.
+
+## 1. Project Structure
+The project is divided into two main directories:
+- `backend/`: Contains the Spring Boot microservices.
+- `frontend/`: Contains the React application built with Vite.
+
+## 2. Technology Stack
+
+### Backend (Java & Spring Boot)
+- **Java Version:** 17
+- **Framework:** Spring Boot 4.0.2 (with Spring Cloud 2025.1.0)
+- **Architecture:** Microservices
+- **Services:**
+  - `eureka-server`: Service registry and discovery.
+  - `config-server`: Centralized configuration management.
+  - `api-gateway`: Single entry point for routing requests to internal microservices.
+  - `auth-service`: Handles user authentication, authorization, and JWT generation/validation.
+  - `donor-service`: Manages donor profiles, search functionalities, and related business logic.
+- **Database:** MySQL (connected via Spring Data JPA)
+- **Security:** Spring Security + JWT (JSON Web Tokens)
+- **Utilities:** Lombok (boilerplate reduction), MapStruct (object mapping), OpenFeign (inter-service communication).
+
+### Frontend (React & Vite)
+- **Framework:** React 19.2.5
+- **Build Tool:** Vite 8.0.10
+- **Routing:** React Router DOM (v7)
+- **Styling:** Tailwind CSS (v4)
+- **HTTP Client:** Axios (for communicating with the API Gateway)
+- **Icons:** Lucide React
+- **Notifications:** React Hot Toast
+- **Pages:**
+  - `Home`: Landing page.
+  - `Login` / `Signup`: User onboarding and authentication.
+  - `Profile`: User profile management.
+  - `RegisterDonor`: Form for users to register as blood donors.
+  - `SearchDonors`: Search functionality to find available donors by location and blood group.
+  - `Emergency`: Urgent blood request handling.
+- **Components:** `Navbar` and other reusable UI elements.
+
+## 3. Core Features
+1. **User Authentication:** Secure login and signup with JWT tokens.
+2. **Donor Registration:** Users can sign up as donors, providing details like blood group, location, and contact information.
+3. **Search & Discovery:** A robust search feature allowing users to find donors based on geographical criteria (City, State, Country) and Blood Group without forcing phone number requirements.
+4. **Emergency Handling:** A dedicated page to quickly handle emergency requests.
+5. **Profile Management:** Users can update their profiles and view their donor status.
+
+## 4. How to Run Locally
+
+### Backend Setup
+1. Ensure MySQL is running and databases are configured as per the `application.yml` files in the microservices.
+2. Start the services in the following order to ensure smooth discovery:
+   - `eureka-server` (Service Registry)
+   - `config-server` (Configuration)
+   - `api-gateway` (Gateway)
+   - `auth-service` & `donor-service` (Core Microservices)
+
+### Frontend Setup
+1. Navigate to the `frontend/` directory.
+2. Run `npm install` to install dependencies.
+3. Run `npm run dev` to start the Vite development server.
+4. Access the application typically at `http://localhost:5173`.
+
+## 5. Development Workflow Context
+- Ensure you respect the microservices boundaries. If adding new business logic related to donors, it goes into `donor-service`. If adding general authentication, it goes into `auth-service`.
+- Frontend API calls should generally be routed through the `api-gateway` port rather than calling individual services directly.
+- Styling changes should be done using Tailwind CSS utility classes inside the React components.

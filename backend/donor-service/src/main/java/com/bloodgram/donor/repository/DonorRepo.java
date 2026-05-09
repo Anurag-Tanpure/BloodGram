@@ -25,8 +25,8 @@ public interface DonorRepo extends JpaRepository<Donor,Long> {
 
     boolean existsByUserId(Long userId);
 
-    Optional<List<Donor>> findByBloodGroupAndCityAndStateAndCountryAndIsAvailable(
-            String bloodGroup, String city, String state, String country, Boolean isAvailable);
+    List<Donor> findByBloodGroupAndCityAndStateAndCountryAndIsAvailableTrue(
+            String bloodGroup, String city, String state, String country);
 
     Optional<Donor> findByPhoneNumber(String phoneNumber);
 }

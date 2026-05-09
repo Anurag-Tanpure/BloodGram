@@ -50,6 +50,7 @@ public class Donor {
 
     private Integer weight;
 
+    @Column(name = "is_available", nullable = false, columnDefinition = "BOOLEAN")
     private Boolean isAvailable;
 
     private String imageUrl;

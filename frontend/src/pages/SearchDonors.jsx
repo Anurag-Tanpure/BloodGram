@@ -198,7 +198,7 @@ export default function SearchDonors() {
     const location = useLocation();
     const initialQuery = new URLSearchParams(location.search).get('q') || '';
 
-    const [filters, setFilters] = useState({ bloodGroup: '', city: '', state: '', country: '', phoneNumber: '' });
+    const [filters, setFilters] = useState({ bloodGroup: '', city: '', state: '', country: '' });
     const [donors, setDonors] = useState([]);
     const [loading, setLoading] = useState(false);
     const [hasSearched, setHasSearched] = useState(false);
@@ -207,10 +207,7 @@ export default function SearchDonors() {
     useEffect(() => {
         if (initialQuery) {
             const q = initialQuery.trim();
-            const isPhone = /^\d{10,15}$/.test(q);
-            const updated = isPhone
-                ? { ...filters, phoneNumber: q, city: '' }
-                : { ...filters, city: q, phoneNumber: '' };
+            const updated = { ...filters, city: q };
             setFilters(updated);
             runSearch(updated);
         }
@@ -222,16 +219,10 @@ export default function SearchDonors() {
         setLoading(true);
         setHasSearched(true);
         try {
-            if (searchFilters.phoneNumber) {
-                const res = await api.get('/donor/searchDonor', { params: { phoneNumber: searchFilters.phoneNumber } });
-                const found = res.data ? [res.data] : [];
-                setDonors(found);
-            } else {
-                const payload = {};
-                Object.keys(searchFilters).forEach(k => { if (searchFilters[k]) payload[k] = searchFilters[k]; });
-                const res = await api.post('/donor/donors', payload);
-                setDonors(res.data || []);
-            }
+            const payload = {};
+            Object.keys(searchFilters).forEach(k => { if (searchFilters[k]) payload[k] = searchFilters[k]; });
+            const res = await api.post('/donor/donors', payload);
+            setDonors(res.data || []);
             setShowFilters(false); // Always collapse after any search attempt to keep it clean
         } catch (err) {
             setDonors([]);
@@ -306,15 +297,7 @@ export default function SearchDonors() {
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
-                                    <div>
-                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-1.5 block">Search by Phone</label>
-                                        <div className="relative">
-                                            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-300" />
-                                            <input type="text" name="phoneNumber" placeholder="Phone Number" value={filters.phoneNumber || ''} onChange={handleChange}
-                                                className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-10 pr-4 py-2.5 text-sm outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 transition" />
-                                        </div>
-                                    </div>
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
                                     <div>
                                         <label className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-1.5 block">City</label>
                                         <div className="relative">

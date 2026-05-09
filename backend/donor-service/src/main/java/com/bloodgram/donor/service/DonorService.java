@@ -91,22 +91,19 @@ public class DonorService {
 
     }
 
-     public List<AvailabeDonorsReponse>  findAvailableDonors(FindDonorRequest request)
-     {
-         List<Donor> donors = donorRepo.findByBloodGroupAndCityAndStateAndCountryAndIsAvailable(
-                 request.getBloodGroup(),
-                 request.getCity(),
-                 request.getState(),
-                 request.getCountry(),
-                 true
-         ).orElse(List.of());
+    public List<AvailabeDonorsReponse> findAvailableDonors(FindDonorRequest request) {
+
+        List<Donor> donors = donorRepo.findByBloodGroupAndCityAndStateAndCountryAndIsAvailableTrue(
+                request.getBloodGroup(),
+                request.getCity(),
+                request.getState(),
+                request.getCountry()
+        );
 
         return donors.stream()
                 .map(donorMapper::donorToAvailabeDonorsResponse)
                 .toList();
-
-     }
-
+    }
      public DonorProfileResponse findByPhoneNumber(String phoneNumber)
      {
          return donorMapper.donorToDonorProfileResponse(

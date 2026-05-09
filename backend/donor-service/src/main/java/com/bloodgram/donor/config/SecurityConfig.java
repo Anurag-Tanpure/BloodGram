@@ -15,7 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableMethodSecurity
+@EnableMethodSecurity(jsr250Enabled = true,    prePostEnabled = true)
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
@@ -24,13 +24,26 @@ public class SecurityConfig {
         this.jwtAuthFilter = jwtAuthFilter;
     }
 
+//    @Bean
+//    SecurityFilterChain securityFilterChain(HttpSecurity http)
+//    {
+//        return http.
+//                csrf(c->c.disable())
+//                .authorizeHttpRequests(auth->
+//                        auth.anyRequest().permitAll())
+//                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+//                .build();
+//    }
+
+
+
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http)
     {
         return http.
                 csrf(c->c.disable())
                 .authorizeHttpRequests(auth->
-                        auth.anyRequest().authenticated())
+                        auth.anyRequest().permitAll())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

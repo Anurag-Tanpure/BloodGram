@@ -1,8 +1,3 @@
-/**
- * Created by Anurag Tanpure
- * Date: 29-01-2026
- */
-
 package com.bloodgram.donor.util;
 
 import io.jsonwebtoken.JwtException;
