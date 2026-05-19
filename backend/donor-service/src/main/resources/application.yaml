@@ -6,7 +6,7 @@ spring:
     name: donor-service
 
   datasource:
-    url: jdbc:mysql://localhost:3307/bloodgram
+    url: jdbc:mysql://localhost:3306/bloodgram
     username: root
     password: anurag
     driver-class-name: com.mysql.cj.jdbc.Driver
